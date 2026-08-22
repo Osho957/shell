@@ -59,7 +59,7 @@ public class Main {
             return;
         }
         List<String> command = new ArrayList<>();
-        command.add(exe.getAbsolutePath());
+        command.add(exe.getPath());
         command.addAll(Arrays.asList(args));
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.inheritIO();
@@ -86,7 +86,4 @@ public class Main {
         }
         return null;
     }
-
-
-
 }
