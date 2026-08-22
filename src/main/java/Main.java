@@ -44,7 +44,7 @@ public class Main {
             System.out.println("cd: " + path + ": No such file or directory");
             return;
         }
-        System.out.println(path);
+        System.setProperty("user.dir", dir.getAbsolutePath());
     }
 
     private static void handleType(String[] args) {
