@@ -16,6 +16,7 @@ public class Main {
             currentDir = new File(System.getProperty("user.dir"));
         }
     }
+
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
@@ -46,16 +47,24 @@ public class Main {
     }
 
     public static void changeDirectory(String[] args) {
-        if (args.length == 0) { return; }
-
-        String path = args[0];
-        File target = new File(currentDir, path);
-        if (!target.exists() || !target.isDirectory()) {
-            System.err.println("cd: " + path + ": No such file or directory");
+        if (args.length == 0) {
             return;
         }
+
+        String path = args[0];
+        File target = null;
         try {
-            currentDir = target.getCanonicalFile();
+            if (!path.startsWith("/")) {
+                target = new File(currentDir, path);
+            } else {
+                target = new File(path);
+            }
+            if (!target.exists() || !target.isDirectory()) {
+                System.err.println("cd: " + path + ": No such file or directory");
+                return;
+            }
+
+            currentDir = currentDir.getCanonicalFile();
         } catch (IOException e) {
             currentDir = target.getAbsoluteFile();
         }
