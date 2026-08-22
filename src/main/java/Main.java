@@ -54,11 +54,7 @@ public class Main {
             System.err.println("cd: " + path + ": No such file or directory");
             return;
         }
-        try {
-            currentDir = target.getCanonicalFile();
-        } catch (IOException e) {
-            currentDir = target.getAbsoluteFile();
-        }
+        currentDir = target;    
     }
 
     private static void handleType(String[] args) {
