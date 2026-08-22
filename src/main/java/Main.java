@@ -30,10 +30,21 @@ public class Main {
                         System.out.println(input.length() > 5 && input.startsWith("echo ") ? input.substring(5) : "");
                     case "type" -> handleType(arg);
                     case "pwd" -> getCurrentDirectory();
+                    case "cd" -> changeDirectory(arg);
                     default -> handleExternalCommand(cmd, arg);
                 }
             }
         }
+    }
+
+    public static void changeDirectory(String[] args){
+        String path = args[0];
+        File dir = new File(path);
+        if (!dir.exists() || !dir.isDirectory()) {
+            System.out.println("cd: " + path + ": No such file or directory");
+            return;
+        }
+        System.out.println(path);
     }
 
     private static void handleType(String[] args) {
