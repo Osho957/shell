@@ -29,6 +29,7 @@ public class Main {
                     case "echo" ->
                         System.out.println(input.length() > 5 && input.startsWith("echo ") ? input.substring(5) : "");
                     case "type" -> handleType(arg);
+                    case "cmd" -> getCurrentDirectory();
                     default -> handleExternalCommand(cmd, arg);
                 }
             }
@@ -85,5 +86,10 @@ public class Main {
             }
         }
         return null;
+    }
+
+    private static void getCurrentDirectory() {
+        String currentDir = System.getProperty("user.dir");
+        System.out.println(currentDir);
     }
 }
