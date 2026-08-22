@@ -1,23 +1,31 @@
 import java.io.File;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+
+    private static final String PROMPT = "$ ";
+    private static final Set<String> BUILTINS = Set.of(
+        "cd", "echo", "exit", "help", "history", "pwd", "type",
+        "alias", "unalias", "export", "unset", "jobs", "fg", "bg", "kill"
+    );
+
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.print("$ ");
-            String input = scanner.nextLine();
-            if (input.equals("exit")) {
-                break;
-            }
+            System.out.print(PROMPT);
+            if (!scanner.hasNextLine()) break;
 
-            if (input.startsWith("echo ")) {
-                System.out.println(input.substring(5));
+            String input = scanner.nextLine();
+            if (input.equals("exit")) break;
+
+            if (input.equals("echo") || input.startsWith("echo ")) {
+                System.out.println(input.equals("echo") ? "" : input.substring(5));
             } else if (input.startsWith("type ")) {
                 String command = input.substring(5);
-                if (isBuiltIn(command)){
-                  System.out.println(command + " is a shell builtin");
-                }else{
+                if (BUILTINS.contains(command)) {
+                    System.out.println(command + " is a shell builtin");
+                } else {
                     searchInPath(command);
                 }
             } else {
@@ -26,29 +34,17 @@ public class Main {
         }
     }
 
-    private static boolean isBuiltIn(String command){
-        String[] builtIns = {"cd", "echo", "exit", "help", "history", "pwd", "type", "alias", "unalias", "export", "unset", "jobs", "fg", "bg", "kill"};
-        for (String builtIn : builtIns) {
-            if (builtIn.equals(command)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static void searchInPath(String command){
-        String path  = System.getenv("PATH");
-        if (path == null || path.isEmpty()) {
+    private static void searchInPath(String command) {
+        String pathEnv = System.getenv("PATH");
+        if (pathEnv == null || pathEnv.isEmpty()) {
             System.out.println(command + ": not found");
             return;
         }
-        for (String dir : path.split(File.pathSeparator)){
-            if (dir.isEmpty()) {
-                continue;
-            }
+        for (String dir : pathEnv.split(File.pathSeparator)) {
+            if (dir.isEmpty()) continue;
             File file = new File(dir, command);
             if (file.exists() && file.canExecute()) {
-                System.out.println(command+ " is " + file.getPath());
+                System.out.println(command + " is " + file.getAbsolutePath());
                 return;
             }
         }
