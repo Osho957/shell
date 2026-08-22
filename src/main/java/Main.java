@@ -8,6 +8,14 @@ public class Main {
             "cd", "echo", "exit", "help", "history", "pwd", "type",
             "alias", "unalias", "export", "unset", "jobs", "fg", "bg", "kill");
 
+    private static File currentDir;
+    static {
+        try {
+            currentDir = new File(System.getProperty("user.dir")).getCanonicalFile();
+        } catch (IOException e) {
+            currentDir = new File(System.getProperty("user.dir"));
+        }
+    }
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
@@ -37,14 +45,20 @@ public class Main {
         }
     }
 
-    public static void changeDirectory(String[] args){
+    public static void changeDirectory(String[] args) {
+        if (args.length == 0) { return; }
+
         String path = args[0];
-        File dir = new File(path);
-        if (!dir.exists() || !dir.isDirectory()) {
+        File target = new File(currentDir, path);
+        if (!target.exists() || !target.isDirectory()) {
             System.out.println("cd: " + path + ": No such file or directory");
             return;
         }
-        System.setProperty("user.dir", dir.getAbsolutePath());
+        try {
+            currentDir = target.getCanonicalFile();
+        } catch (IOException e) {
+            currentDir = target.getAbsoluteFile();
+        }
     }
 
     private static void handleType(String[] args) {
@@ -63,7 +77,7 @@ public class Main {
             System.out.println(target + " not found");
         }
     }
- 
+
     private static void handleExternalCommand(String cmd, String[] args) {
         File exe = findExecutable(cmd);
         if (exe == null) {
@@ -82,7 +96,6 @@ public class Main {
             System.err.println("Error executing command: " + e.getMessage());
         }
     }
-
 
     private static File findExecutable(String name) {
         String pathEnv = System.getenv("PATH");
