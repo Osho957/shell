@@ -55,6 +55,7 @@ public class Main {
         File target = null;
         try {
             if (!path.startsWith("/")) {
+                currentDir = currentDir.getCanonicalFile();
                 target = new File(currentDir, path);
             } else {
                 target = new File(path);
