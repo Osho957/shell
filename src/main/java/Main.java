@@ -29,7 +29,7 @@ public class Main {
                     case "echo" ->
                         System.out.println(input.length() > 5 && input.startsWith("echo ") ? input.substring(5) : "");
                     case "type" -> handleType(arg);
-                    case "cmd" -> getCurrentDirectory();
+                    case "pwd" -> getCurrentDirectory();
                     default -> handleExternalCommand(cmd, arg);
                 }
             }
