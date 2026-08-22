@@ -51,7 +51,7 @@ public class Main {
         String path = args[0];
         File target = new File(currentDir, path);
         if (!target.exists() || !target.isDirectory()) {
-            System.out.println("cd: " + path + ": No such file or directory");
+            System.err.println("cd: " + path + ": No such file or directory");
             return;
         }
         try {
