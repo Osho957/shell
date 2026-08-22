@@ -49,7 +49,7 @@ public class Main {
         if (args.length == 0) { return; }
 
         String path = args[0];
-        File target = new File(currentDir, path);
+        File target = new File(path);
         if (!target.exists() || !target.isDirectory()) {
             System.err.println("cd: " + path + ": No such file or directory");
             return;
