@@ -54,7 +54,11 @@ public class Main {
             System.err.println("cd: " + path + ": No such file or directory");
             return;
         }
-        currentDir = target;    
+        try {
+            currentDir = target.getCanonicalFile();
+        } catch (IOException e) {
+            currentDir = target.getAbsoluteFile();
+        }
     }
 
     private static void handleType(String[] args) {
@@ -109,7 +113,6 @@ public class Main {
     }
 
     private static void getCurrentDirectory() {
-        String currentDir = System.getProperty("user.dir");
-        System.out.println(currentDir);
+        System.out.println(currentDir.getAbsolutePath());
     }
 }
