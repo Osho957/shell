@@ -52,22 +52,21 @@ public class Main {
         }
 
         String path = args[0];
-        File target = null;
+        File target;
         try {
             if (!path.startsWith("/")) {
-                currentDir = currentDir.getCanonicalFile();
-                target = new File(currentDir, path);
+                target = new File(currentDir, path).getCanonicalFile();
             } else {
-                target = new File(path);
+                target = new File(path).getCanonicalFile();
             }
             if (!target.exists() || !target.isDirectory()) {
                 System.err.println("cd: " + path + ": No such file or directory");
                 return;
             }
 
-            currentDir = currentDir.getCanonicalFile();
+            currentDir = target;
         } catch (IOException e) {
-            currentDir = target.getAbsoluteFile();
+            System.err.println("cd: " + path + ": No such file or directory");
         }
     }
 
@@ -98,6 +97,7 @@ public class Main {
         command.add(cmd);
         command.addAll(Arrays.asList(args));
         ProcessBuilder pb = new ProcessBuilder(command);
+        pb.directory(currentDir);
         pb.inheritIO();
         try {
             Process process = pb.start();
