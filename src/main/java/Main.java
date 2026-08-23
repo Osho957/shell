@@ -55,7 +55,19 @@ public class Main {
         File target;
         try {
             if (!path.startsWith("/")) {
-                target = new File(currentDir, path).getCanonicalFile();
+                if (path.startsWith("~")) {
+                    String home = System.getenv("HOME");
+                    if (home == null || home.isEmpty()) {
+                        home = System.getProperty("user.home");
+                    }
+                    String suffix = path.length() > 1 ? path.substring(1) : "";
+                    if (suffix.startsWith("/")) {
+                        suffix = suffix.substring(1);
+                    }
+                    target = new File(home, suffix).getCanonicalFile();
+                } else {
+                    target = new File(currentDir, path).getCanonicalFile();
+                }
             } else {
                 target = new File(path).getCanonicalFile();
             }
